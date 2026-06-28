@@ -35,29 +35,42 @@ archmind/
 ├── .env
 └── .gitignore
 
-text## 🚀 Como usar
+```
+
+## 🚀 Como executar
 
 ### 1. Instalar dependências
 
 ```bash
 pip install -r requirements.txt
-2. Iniciar o Ollama
-Certifique-se que o Ollama está rodando e que o modelo llama3.1 está baixado:
-Bashollama serve
+```
+### 2. Iniciar o Ollama
+Certifique-se que o Ollama está rodando e que o modelo está baixado:
+
+```bash
+ollama serve
 ollama pull llama3.1
-3. Fazer a ingestão dos documentos
-Coloque seus PDFs na pasta data/docs/ e rode:
-Bashpython ingestion.py
-4. Iniciar o ArchMind
+```
+### 3. Fazer a ingestão dos documentos
+Coloque seus arquivos .pdf dentro da pasta data/docs/ e rode:
+
+```bash
+python ingestion.py
+```
+### 4. Iniciar o ArchMind
+
+```bash
 Bashpython main.py
-Depois é só fazer perguntas normalmente. Para sair, digite sair ou exit.
-⚠️ Observações Importantes
+```
+Depois é só fazer perguntas normalmente. Para sair digite sair, exit ou quit.
+
+## ⚠️ Observações Importantes
 
 A pasta chroma_db/ não deve ser commitada (já está no .gitignore)
 Documentos sensíveis ou PDFs devem ficar na pasta data/docs/
 O sistema responde apenas com base no contexto ingerido. Se não encontrar a informação, ele avisa.
 Temperatura do modelo está em 0 para maior precisão factual.
 
-📌 Status
+## 📌 Status
 Projeto em desenvolvimento.
 Versão atual: RAG 1.0 (pipeline local enterprise)
