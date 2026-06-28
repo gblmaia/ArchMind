@@ -23,15 +23,18 @@ O ArchMind foi desenvolvido para eliminar a fragmentação de conhecimento corpo
 - PyPDFLoader + RecursiveCharacterTextSplitter
 
 ## 📁 Estrutura do Projeto
+
+```text
 archmind/
 ├── data/
 │   └── docs/              # Coloque seus PDFs aqui
-├── chroma_db/             # Banco vetorial (ignorado no Git)
+├── chroma_db/             # Banco vetorial gerado (ignorado no Git)
 ├── ingestion.py           # Script de ingestão de documentos
 ├── main.py                # Interface de chat RAG
 ├── requirements.txt
 ├── .env
 └── .gitignore
+
 text## 🚀 Como usar
 
 ### 1. Instalar dependências
