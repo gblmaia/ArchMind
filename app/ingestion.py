@@ -61,11 +61,15 @@ def ingest_single_pdf(file_path: Path, vectorstore: Optional[Chroma] = None) -> 
 
         # 3. Enriquecimento de metadados
         ingestion_timestamp = datetime.utcnow().isoformat()
+
         for chunk in chunks:
             chunk.metadata.update({
                 "source": file_path.name,
+                "source_path": str(file_path),
                 "ingested_at": ingestion_timestamp,
-                "pipeline_version": "1.0.0-enterprise"
+                "pipeline_version": "1.1.0",
+                "chunk_size": len(chunk.page_content),
+                "file_type": file_path.suffix
             })
 
         # 4. Persistência no Chroma
