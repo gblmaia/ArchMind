@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  archmind:
+    build: .
+    container_name: archmind
+    volumes:
+      - .:/app
+      - ./chroma_db:/app/chroma_db
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
