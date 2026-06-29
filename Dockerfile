@@ -1,25 +1,48 @@
-FROM python:3.11-slim
+# ============================================
+# STAGE 1: Builder (instala dependências)
+# ============================================
+FROM python:3.11-slim AS builder
 
-# Define a pasta de trabalho dentro do container
 WORKDIR /app
 
-# Instala algumas ferramentas do sistema que o ChromaDB precisa
-RUN apt-get update && apt-get install -y \
+# Instala dependências do sistema necessárias
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Copia o arquivo de dependências primeiro (isso ajuda a Docker usar cache)
+# Copia requirements primeiro (melhor cache)
 COPY requirements.txt .
 
-# Instala as bibliotecas do Python
-RUN pip install --no-cache-dir -r requirements.txt
+# Instala dependências Python
+RUN pip install --no-cache-dir --user -r requirements.txt
 
-# Copia todo o resto do projeto para dentro do container
+# ============================================
+# STAGE 2: Runtime (imagem final menor)
+# ============================================
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Cria usuário não-root (segurança)
+RUN useradd --create-home --shell /bin/bash appuser
+
+# Copia as dependências instaladas do builder
+COPY --from=builder /root/.local /home/appuser/.local
+
+# Copia o código do projeto
 COPY . .
 
-# Cria a pasta do ChromaDB (caso não exista)
-RUN mkdir -p chroma_db
+# Ajusta permissões
+RUN chown -R appuser:appuser /app
 
-# Comando que vai rodar quando o container iniciar
-CMD ["python", "main.py"]
+# Muda para o usuário não-root
+USER appuser
+
+# Adiciona o path das dependências instaladas
+ENV PATH=/home/appuser/.local/bin:$PATH
+
+# Expõe a porta do FastAPI
+EXPOSE 8000
+
+# Comando para rodar a aplicação
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
