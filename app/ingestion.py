@@ -15,7 +15,7 @@ EMBEDDING_MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
 CHUNK_SIZE: int = 1000
 CHUNK_OVERLAP: int = 150
 PERSIST_DIRECTORY: str = "./chroma_db"
-DATA_DIRECTORY: Path = Path("data/docs")
+DATA_DIRECTORY: Path = Path("../data/docs")
 
 # Configuração de Logging
 logging.basicConfig(

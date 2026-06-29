@@ -27,20 +27,28 @@ Regras importantes:
 CONTEXTO:
 {context}
 
-PERGUNTA: {input}
+PERGUNSA: {input}
 """)
 
 document_chain = create_stuff_documents_chain(llm, prompt)
 qa_chain = create_retrieval_chain(retriever, document_chain)
 
-# ==================== INTERFACE ====================
-print("--- ArchMind Online (Enterprise RAG) ---")
 
-while True:
-    pergunta = input("\nVocê: ")
-    if pergunta.lower() in ["sair", "exit", "quit"]:
-        print("ArchMind: Até mais, humano~")
-        break
+# ==================== FUNÇÃO PRINCIPAL ====================
+def ask_archmind(question: str) -> dict:
+    """
+    Função que recebe uma pergunta e retorna a resposta do RAG.
+    """
+    resposta = qa_chain.invoke({"input": question})
 
-    resposta = qa_chain.invoke({"input": pergunta})
-    print(f"\nArchMind:\n{resposta['answer']}")
+    # Extrai as fontes dos documentos recuperados
+    sources = []
+    if "context" in resposta:
+        for doc in resposta["context"]:
+            source = doc.metadata.get("source", "desconhecido")
+            sources.append(source)
+
+    return {
+        "answer": resposta["answer"],
+        "sources": sources
+    }

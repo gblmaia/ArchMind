@@ -60,7 +60,7 @@ python ingestion.py
 ### 4. Iniciar o ArchMind
 
 ```bash
-Bashpython main.py
+Bashpython rag.py
 ```
 Depois é só fazer perguntas normalmente. Para sair digite sair, exit ou quit.
 
