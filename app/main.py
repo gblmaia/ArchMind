@@ -1,8 +1,13 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import logging
 
-# Importa a função que criamos no rag.py
+# Importa a configuração de logs
+from app.logging_config import setup_logging
 from app.rag import ask_archmind
+
+# Configura o logging
+logger = setup_logging()
 
 app = FastAPI(title="ArchMind API", version="1.0")
 
@@ -23,10 +28,21 @@ def root():
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    # Aqui chamamos o RAG de verdade
-    resultado = ask_archmind(request.question)
+    logger.info(f"Nova pergunta recebida: {request.question}")
 
-    return ChatResponse(
-        answer=resultado["answer"],
-        sources=resultado["sources"]
-    )
+    try:
+        resultado = ask_archmind(request.question)
+
+        logger.info("Resposta gerada com sucesso")
+
+        return ChatResponse(
+            answer=resultado["answer"],
+            sources=resultado["sources"]
+        )
+
+    except Exception as e:
+        logger.error(f"Erro ao processar pergunta: {str(e)}")
+        return ChatResponse(
+            answer="Desculpe, ocorreu um erro ao processar sua pergunta.",
+            sources=[]
+        )
